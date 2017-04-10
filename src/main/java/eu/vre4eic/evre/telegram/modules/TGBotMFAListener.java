@@ -27,7 +27,6 @@ public class TGBotMFAListener implements MessageListener<MultiFactorMessage>{
 	
 	public  TGBotMFAListener(TgAuthenticator authModule) {
 		this.module = authModule;
-		authTable=new Vector<String>();
 	}
 	
 	/* (non-Javadoc)
@@ -36,12 +35,8 @@ public class TGBotMFAListener implements MessageListener<MultiFactorMessage>{
 	@Override
 	public void onMessage(MultiFactorMessage message) {
 
-		log.info("##### authentication message arrived #####");
-
-			if ( !authTable.contains(message.getUserId())){
-				authTable.add(message.getUserId());
-				module.send2faCode(new Integer(message.getAuthId()), "The code to authenticate '"+message.getUserId()+"' in e-VRE is: 12345");     
-			}
+		log.info("##### MultiFactorMessage message arrived #####");
+		module.send2faCode(new Integer(message.getAuthId()), "The code to authenticate '"+message.getUserId()+"' in e-VRE is: " + message.getCode());     
 
 	}
 
