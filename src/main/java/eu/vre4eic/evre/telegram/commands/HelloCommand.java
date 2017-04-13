@@ -20,7 +20,7 @@ public class HelloCommand extends BotCommand {
     private static final String LOGTAG = "HELLOCOMMAND";
 
     public HelloCommand() {
-        super("hello", "Welcome to e-VRE authenticator bot");
+        super("hello", "Welcome to e-VRE bot");
     }
 
     @Override

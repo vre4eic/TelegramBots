@@ -76,8 +76,8 @@ public class RegisterAuthCommand extends BotCommand {
 					//check this!!!
 					collection.updateOne(searchQuery, updateObj);
 					
-					messageBuilder.append("Hi ").append(userName).append("\n");
-					messageBuilder.append("this Telegram account is now registered as authenticator for "+arguments[0]);
+					messageBuilder.append("Done ").append(userName).append(",\n");
+					messageBuilder.append("this Telegram account is now registered as e-VRE Authenticator for "+arguments[0]);
 					
 				}else {//error credentials wrong
 					messageBuilder.append("Hi ").append(userName).append("\n");
@@ -88,6 +88,7 @@ public class RegisterAuthCommand extends BotCommand {
 				messageBuilder.append("Hi ").append(userName).append("\n");
 				messageBuilder.append("credentials not valid!");
 			}
+			mongoClient.close();
 		}
 
 		SendMessage answer = new SendMessage();

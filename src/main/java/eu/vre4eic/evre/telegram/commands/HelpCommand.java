@@ -22,7 +22,7 @@ public class HelpCommand extends BotCommand {
     private final ICommandRegistry commandRegistry;
 
     public HelpCommand(ICommandRegistry commandRegistry) {
-        super("help", "Get all the commands the e-VRE authenticator bot provides");
+        super("help", "Get all the commands the e-VRE bot provides");
         this.commandRegistry = commandRegistry;
     }
 
