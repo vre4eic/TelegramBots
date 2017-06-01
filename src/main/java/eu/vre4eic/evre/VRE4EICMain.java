@@ -22,7 +22,8 @@ public class VRE4EICMain {
     private static final String LOGTAG = "MAIN";
 
     public static void main(String[] args) {
-        BotLogger.setLevel(Level.ALL);
+       // BotLogger.setLevel(Level.ALL);
+        BotLogger.setLevel(Level.INFO);
         BotLogger.registerLogger(new ConsoleHandler());
         try {
             BotLogger.registerLogger(new BotsFileHandler());

@@ -22,7 +22,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
 
-import eu.vre4eic.evre.SpringMongoConfig;
+//import eu.vre4eic.evre.SpringMongoConfig;
 import eu.vre4eic.evre.core.impl.EVREUserProfile;
 import eu.vre4eic.evre.nodeservice.usermanager.UserManager;
 import eu.vre4eic.evre.nodeservice.usermanager.dao.UserProfileRepository;
@@ -42,7 +42,7 @@ public class RegisterAuthCommand extends BotCommand {
 	
 
 	public RegisterAuthCommand() {
-		super("register", "This command registers the Telegram account  as an authenticator for a user in e-VRE, usage: <i>/register username password</i>");
+		super("register", "This command registers this Telegram Id  as an authenticator for a user in e-VRE, usage: <i>/register username password</i>");
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class RegisterAuthCommand extends BotCommand {
 			//FindIterable<Document> itcursor=collection.find();
 			MongoCursor<Document> cursor=itcursor.iterator();
 			if (cursor.hasNext()){
-				//System.out.println("################## "+cursor.next());
+				
 				Document userCan=cursor.next();
 				String pwd=userCan.getString("password");
 				if(pwd.equals(arguments[1])){

@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class BuildVars {
-    public static final Boolean debug = true;
+    public static final Boolean debug = false;
     public static final Boolean useWebHook = false;
     public static final int PORT = 8443;
     public static final String EXTERNALWEBHOOKURL = "https://example.changeme.com:" + PORT; // https://(xyz.)externaldomain.tld

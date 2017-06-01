@@ -23,16 +23,16 @@ import com.mongodb.client.MongoDatabase;
  */
 public class RemoveAuthCommand extends BotCommand {
 
-    public static final String LOGTAG = "STARTCOMMAND";
+	public static final String LOGTAG = "STARTCOMMAND";
 
-    public RemoveAuthCommand() {
-        super("remove", "This command deletes this Telegram account as authenticator for <i>username</i> in e-VRE, usage: <i>/removea username password</i>");
-    }
+	public RemoveAuthCommand() {
+		super("remove", "This command deletes this Telegram Id as authenticator for <i>username</i> in e-VRE, usage: <i>/remove username password</i>");
+	}
 
-    @Override
-    public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
+	@Override
+	public void execute(AbsSender absSender, User user, Chat chat, String[] arguments) {
 
-		
+
 		String userName = user.getFirstName() + " " + user.getLastName();
 		StringBuilder messageBuilder = new StringBuilder();
 		if (arguments.length!=2){
@@ -53,23 +53,34 @@ public class RemoveAuthCommand extends BotCommand {
 				Document userCan=cursor.next();
 				String pwd=userCan.getString("password");
 				if(pwd.equals(arguments[1])){
-					
-					userCan.replace("authId", "0");
-					BasicDBObject updateObj = new BasicDBObject();
-					updateObj.put("$set", userCan);
-					//check this!!!
-					collection.updateOne(searchQuery, updateObj);
-					
-					messageBuilder.append("Done ").append(userName).append(", \n");
-					messageBuilder.append("this Telegram account is no longer an e-VRE Authenticator for "+arguments[0]);
-					
+
+					String aId=userCan.getString("authId");
+					if (!aId.equals("0")){
+						// we don't check if the chat.getId() is the same,
+						//because a user can remove this from another Telegram ID,
+						// need to check this
+						
+						userCan.replace("authId", "0");
+						BasicDBObject updateObj = new BasicDBObject();
+						updateObj.put("$set", userCan);
+						//check this!!!
+						collection.updateOne(searchQuery, updateObj);
+
+						messageBuilder.append("Done ").append(userName).append(", \n");
+						messageBuilder.append("this Telegram account is no longer an e-VRE Authenticator for "+arguments[0]);
+					}
+					else{//the user with the provided credentials has no authenticator defined
+						messageBuilder.append("Hi ").append(userName).append(",\n");
+						messageBuilder.append("something went wrong, please contact the administrator!");
+					}
+
 				}else {//error credentials wrong
 					messageBuilder.append("Hi ").append(userName).append("\n");
 					messageBuilder.append("credentials not valid!");
 				}
-				
+
 			}else {//error credentials wrong
-				messageBuilder.append("Hi ").append(userName).append("\n");
+				messageBuilder.append("Hi ").append(userName).append(",\n");
 				messageBuilder.append("credentials not valid!");
 			}
 			mongoClient.close();

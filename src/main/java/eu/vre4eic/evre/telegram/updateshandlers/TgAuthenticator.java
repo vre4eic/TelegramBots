@@ -2,6 +2,8 @@ package eu.vre4eic.evre.telegram.updateshandlers;
 
 //import org.slf4j.Logger;
 
+import java.util.logging.Level;
+
 import eu.vre4eic.evre.core.comm.Publisher;
 import eu.vre4eic.evre.core.comm.Subscriber;
 import eu.vre4eic.evre.core.comm.SubscriberFactory;
@@ -11,7 +13,6 @@ import eu.vre4eic.evre.telegram.commands.HelloCommand;
 import eu.vre4eic.evre.telegram.commands.HelpCommand;
 import eu.vre4eic.evre.telegram.commands.RegisterAuthCommand;
 import eu.vre4eic.evre.telegram.commands.RemoveAuthCommand;
-
 import eu.vre4eic.evre.telegram.modules.TGBotMFAListener;
 
 import org.telegram.services.Emoji;
@@ -33,9 +34,10 @@ public class TgAuthenticator extends  TelegramLongPollingCommandBot {
 	     * Constructor.
 	     */
 	    public TgAuthenticator() {
+	    	 BotLogger.setLevel(Level.INFO);
 	        register(new HelloCommand());
-	        register(new RemoveAuthCommand());
 	        register(new RegisterAuthCommand());
+	        register(new RemoveAuthCommand());
 	        HelpCommand helpCommand = new HelpCommand(this);
 	        register(helpCommand);
 
