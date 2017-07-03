@@ -103,7 +103,7 @@ public class TgAuthenticator extends  TelegramLongPollingCommandBot {
     @Override
     public String getBotToken() {
         
-        return "304076530:AAFryi3D0xd7e6Vu_yyfiOpIMAPiHDAwIq0";
+        return "my_token";
     }
 	
 
