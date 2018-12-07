@@ -15,11 +15,16 @@
  *******************************************************************************/
 package eu.vre4eic.evre.telegram.commands;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+import org.apache.commons.codec.binary.Base64;
 import org.bson.Document;
-
-
+import org.bson.types.Binary;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Chat;
 import org.telegram.telegrambots.api.objects.User;
@@ -83,7 +88,18 @@ public class RegisterAuthCommand extends BotCommand {
 				
 				Document userCan=cursor.next();
 				String pwd=userCan.getString("password");
-				if(pwd.equals(arguments[1])){
+				
+				Binary binS = userCan.get("salt", org.bson.types.Binary.class);
+				String salt= new String(binS.getData());
+				boolean validUser=false;
+				if(pwd.equals(arguments[1]))
+					validUser=true;
+				
+				if (salt != null && !checkEncryptedData(arguments[1], salt.getBytes()).equals(arguments[1]))
+					validUser=true;
+				
+				//if(pwd.equals(arguments[1])){
+				if(validUser){
 					
 					userCan.replace("authId", chat.getId());
 					BasicDBObject updateObj = new BasicDBObject();
@@ -115,5 +131,30 @@ public class RegisterAuthCommand extends BotCommand {
 		} catch (TelegramApiException e) {
 			BotLogger.error(LOGTAG, e);
 		}
+		
+	}
+	private String checkEncryptedData(String data, byte[] salt){
+		byte[] secret=new byte[12];
+		String passHash=data;
+		
+		  String uPwd=data;
+		  try {
+			 PBEKeySpec keySpec = new PBEKeySpec(uPwd.toCharArray(), salt, 2048, 160);
+			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+			
+			secret = keyFactory.generateSecret(keySpec).getEncoded();
+			
+
+			passHash = Base64.encodeBase64String(secret);
+	       // String saltString = Base64.encodeBase64String(salt);
+			System.out.println("data " + uPwd+", secret "+passHash);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidKeySpecException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		  return passHash;
 	}
 }
